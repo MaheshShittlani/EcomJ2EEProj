@@ -20,9 +20,8 @@ public class DBCommon {
 		Statement st =  con.createStatement();
 		ResultSet rs =  st.executeQuery(sql);
 		
-		rs.close();
-		st.close();
-		con.close();
+//		st.close();
+//		con.close();
 		return rs;
 	}
 	
