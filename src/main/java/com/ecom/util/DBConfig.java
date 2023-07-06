@@ -1,4 +1,4 @@
-package com.ecom.model;
+package com.ecom.util;
 
 public interface DBConfig {
 	String DRIVER = "com.mysql.jdbc.Driver";

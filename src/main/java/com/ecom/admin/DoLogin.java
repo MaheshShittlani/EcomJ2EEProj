@@ -10,8 +10,9 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 
-import com.ecom.business.Admin;
-import com.ecom.model.AdminModel;
+import com.ecom.model.Admin;
+import com.ecom.persistence.AdminDao;
+import com.ecom.util.DBConnection;
 
 /**
  * Servlet implementation class DoLogin
@@ -19,7 +20,14 @@ import com.ecom.model.AdminModel;
 @WebServlet("/admin/login")
 public class DoLogin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+	private DBConnection dbConnection;
+	private AdminDao adminDao;
+	@Override
+	public void init() throws ServletException {
+		super.init();
+		dbConnection = new DBConnection();
+		adminDao = new AdminDao(dbConnection);
+	}
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -31,9 +39,10 @@ public class DoLogin extends HttpServlet {
 		HashMap<String,String> errors = new HashMap<String, String>();
 		if(email.isEmpty()) {
 			errors.put("email", "Email required");
-		} else if(!email.contains("@")){
-			errors.put("email", "Invalid email format");
-		}
+		} 
+//		else if(!email.contains("@")){
+//			errors.put("email", "Invalid email format");
+//		}
 		
 		if(password.isEmpty()) {
 			errors.put("password", "Password required");
@@ -47,7 +56,9 @@ public class DoLogin extends HttpServlet {
 			session.setAttribute("errors", errors);
 			redirectURL = "index.jsp";
 		} else {
-			if(AdminModel.authenticate(email, password)) {
+			Admin admin = adminDao.authenticate(email, password);
+			if(admin!= null) {
+				session.setAttribute("admin", admin);
 				redirectURL = "dashboard.jsp";
 			} else {
 				redirectURL = "index.jsp";
