@@ -41,4 +41,22 @@ public class AdminDao {
 		
 		return null;
 	}
+	
+	public int updateProfile(Admin admin) {
+		String query = "update admins set name = ?, mobile = ? where id = ?";
+		
+		try(Connection con = dbConnection.createConnection();
+				PreparedStatement pst = con.prepareStatement(query)
+				) {
+			pst.setString(1, admin.getName());
+			pst.setString(2, admin.getMobile());
+			pst.setInt(3, admin.getId());
+			
+			return pst.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return 0;
+	}
 }
